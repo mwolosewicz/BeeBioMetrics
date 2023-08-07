@@ -5,4 +5,5 @@ idf_component_register(SRCS
         "lora_helper.c"
         "lora_receiver.c"
         "lora_transmitter.c"
+        "sleep.c"
 INCLUDE_DIRS ".")
