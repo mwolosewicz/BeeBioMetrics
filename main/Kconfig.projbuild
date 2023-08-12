@@ -92,4 +92,17 @@ menu "Application Configuration"
         help
             Set TX power.
 
+    config SLEEP_ENABLED
+        bool "Enable sleep after send"
+    	default false
+    	help
+    		Enable deep sleep after every TX.
+
+    config SLEEP_TIME_SECONDS
+        depends on SLEEP_ENABLED
+        int "Sleep time after TX"
+        default 600
+        help
+            Set how long device should deep sleep after packet send.
+
 endmenu

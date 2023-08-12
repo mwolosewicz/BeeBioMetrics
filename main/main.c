@@ -13,7 +13,6 @@
 #include "lora_receiver.h"
 #include "lora_transmitter.h"
 #include "mac_helper.h"
-#include "sleep.h"
 
 const static char *TAG = "MAIN";
 
@@ -103,7 +102,6 @@ static void prepare_tx_packet(lora_common_data_t *tx_data, uint8_t *mac_addr) {
 }
 
 
-// TODO: Change to one time send and go to sleep!
 static void act_as_sender() {
     lora_common_data_t txData;
     QueueHandle_t lora_send_data_queue;
@@ -133,9 +131,6 @@ static void act_as_sender() {
             while (lora_transmitter_is_transmiting()) {
                 vTaskDelay(pdMS_TO_TICKS(10));
             };
-
-            // Go to sleep.
-            sleep_for_time(CONFIG_SLEEP_TIME_SECONDS);
         }
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
