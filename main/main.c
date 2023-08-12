@@ -47,7 +47,7 @@ static void handle_rx(void *pvParameters) {
 
         }
         // To keep watchdog happy:
-        vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 
