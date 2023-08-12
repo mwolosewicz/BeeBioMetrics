@@ -10,6 +10,7 @@
 #include "esp_log.h"
 #include "lora.h"
 #include "lora_common.h"
+#include "sleep.h"
 
 
 static QueueHandle_t transmitter_data_queue;
@@ -39,6 +40,11 @@ static void task_tx(void *pvParameters) {
             taskEXIT_CRITICAL(&xTransmitMutex);
 
             ESP_LOGI(pcTaskGetName(NULL), "%d byte packet sent...", data_to_send.len);
+
+            if (CONFIG_SLEEP_ENABLED) {
+                ESP_LOGI(pcTaskGetName(NULL), "Sleep enabled, going to sleep for %d", CONFIG_SLEEP_TIME_SECONDS);
+                sleep_for_time(CONFIG_SLEEP_TIME_SECONDS);
+            }
         }
     }
 }

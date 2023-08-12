@@ -9,6 +9,10 @@ BeeEnviroMonitor is an embedded device project aimed at monitoring the environme
 - Pressure monitoring
 - Long-range, low-power LoRa communication
 
+### Deep sleep after TX
+The device offers a feature that allows it to enter a deep sleep mode after each transmission (TX) to conserve battery life.
+This sleep feature can be activated and configured via the menuconfig. Navigate to the following path in the menu: `Application Configuration -> Enable Sleep After Send`.
+
 ## Hardware Requirements
 
 - ESP32 Microcontroller

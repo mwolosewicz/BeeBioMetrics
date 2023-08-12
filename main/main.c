@@ -15,6 +15,7 @@
 #include "mac_helper.h"
 
 const static char *TAG = "MAIN";
+
 #if CONFIG_RECEIVER
 static void convert_uint8_array_to_int(uint8_t *data, int *value) {
     *value = (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3];
@@ -100,6 +101,7 @@ static void prepare_tx_packet(lora_common_data_t *tx_data, uint8_t *mac_addr) {
     print_uint8_array(tx_data->data, (int)tx_data->len);
 }
 
+
 static void act_as_sender() {
     lora_common_data_t txData;
     QueueHandle_t lora_send_data_queue;
@@ -123,6 +125,12 @@ static void act_as_sender() {
         if(xQueueSend(lora_send_data_queue, (void*)&txData, (TickType_t)10) != pdPASS)
         {
             ESP_LOGE(TAG, "Could not send data to queue. Queue full.");
+        } else {
+            // Wait for transmission finish.
+            ESP_LOGD(TAG, "Waiting for transmission finish.");
+            while (lora_transmitter_is_transmiting()) {
+                vTaskDelay(pdMS_TO_TICKS(10));
+            };
         }
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
@@ -142,7 +150,6 @@ void app_main(void)
 #elif CONFIG_SENDER
     act_as_sender();
 #endif
-
     } else {
         ESP_LOGE(TAG, "LoRa initialization failed: %d", lora_init_status);
     }
