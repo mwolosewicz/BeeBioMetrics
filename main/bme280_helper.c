@@ -128,7 +128,7 @@ void bme280_normal_mode_task(void *ignore)
 	com_rslt += bme280_set_power_mode(BME280_NORMAL_MODE);
 	if (com_rslt == SUCCESS) {
 		while(true) {
-		  	vTaskDelay(pdMS_TO_TICKS(1000));
+		  	vTaskDelay(pdMS_TO_TICKS(2000));
 			com_rslt = bme280_read_uncomp_pressure_temperature_humidity(
 				&v_uncomp_pressure_s32, &v_uncomp_temperature_s32, &v_uncomp_humidity_s32);
 

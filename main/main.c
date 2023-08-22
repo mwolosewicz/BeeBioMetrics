@@ -37,6 +37,7 @@ static void handle_rx(void *pvParameters) {
     serialized_data_t temperature;
     serialized_data_t humidity;
     serialized_data_t pressure;
+    uint16_t msg_counter;
 
     uint8_t mac_addr[MAC_ADDR_LEN];
 
@@ -53,10 +54,15 @@ static void handle_rx(void *pvParameters) {
                      mac_addr[4], mac_addr[5], mac_addr[6], mac_addr[7]);
 
 	    if (rxData.data[LORA_MSG_TYPE_OFFSET] == vLORA_MSG_TYPE_BME280) {
-	      ESP_LOGI(pcTaskGetName(NULL), "Received BME280 msg...");
+	      msg_counter = rxData.data[LORA_MSG_IDX_OFFSET];
+	      msg_counter <<= 8;
+	      msg_counter |= rxData.data[LORA_MSG_IDX_OFFSET + 1];
+	      ESP_LOGI(pcTaskGetName(NULL), "Received BME280 msg, counter:%d", msg_counter);
+
 	      memcpy(temperature.serialized, &rxData.data[LORA_MSG_TEMPERATURE_OFFSET], SERIALIZED_DOUBLE_SZ);
 	      memcpy(humidity.serialized, &rxData.data[LORA_MSG_HUMIDITY_OFFSET], SERIALIZED_DOUBLE_SZ);
 	      memcpy(pressure.serialized, &rxData.data[LORA_MSG_PRESSURE_OFFSET], SERIALIZED_DOUBLE_SZ);
+
 	      ESP_LOGI(pcTaskGetName(NULL), "Temperature:%.1f", temperature.value);
 	      ESP_LOGI(pcTaskGetName(NULL), "Humidity:%.1f", humidity.value);
 	      ESP_LOGI(pcTaskGetName(NULL), "Pressure:%.1f", pressure.value);
@@ -111,9 +117,14 @@ static void convert_int_to_uint8_array(int value, uint8_t *data) {
 }
 
 static void prepare_tx_packet(lora_common_data_t *tx_data, uint8_t *mac_addr, bme280_data_t *p_data) {
+    uint16_t msg_counter = lora_get_msg_counter();
+
     // Copy MAC address to tx_data
     memcpy(tx_data->data, mac_addr, MAC_ADDR_LEN);
 
+    // Add message counter and type
+    tx_data->data[LORA_MSG_IDX_OFFSET] = (msg_counter & 0xFF00) >> 8;
+    tx_data->data[LORA_MSG_IDX_OFFSET + 1] = msg_counter & 0x00FF;
     tx_data->data[LORA_MSG_TYPE_OFFSET] = vLORA_MSG_TYPE_BME280;
 
     // BME280 temperature, humidity, pressure
@@ -121,7 +132,7 @@ static void prepare_tx_packet(lora_common_data_t *tx_data, uint8_t *mac_addr, bm
     memcpy(&tx_data->data[LORA_MSG_HUMIDITY_OFFSET], p_data->humidity.serialized, SERIALIZED_DOUBLE_SZ);
     memcpy(&tx_data->data[LORA_MSG_PRESSURE_OFFSET], p_data->pressure.serialized, SERIALIZED_DOUBLE_SZ);
 
-    tx_data->len = MAC_ADDR_LEN + LORA_MSG_TYPE_SZ + (SERIALIZED_DOUBLE_SZ * 3);
+    tx_data->len = MAC_ADDR_LEN + LORA_MSG_IDX_SZ + LORA_MSG_TYPE_SZ + (SERIALIZED_DOUBLE_SZ * 3);
 
     // Debug, show tx_data->data array:
     print_uint8_array(tx_data->data, (int)tx_data->len);
