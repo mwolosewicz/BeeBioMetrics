@@ -7,6 +7,20 @@
 
 #include <stdint.h>
 
+// Project includes
+#include "bme280_helper.h"
+
+// LORA message types
+#define vLORA_MSG_TYPE_BME280 1 // BME280 measurements
+
+// LORA field size
+#define LORA_MSG_TYPE_SZ 1
+
+#define LORA_MSG_TYPE_OFFSET 8
+#define LORA_MSG_TEMPERATURE_OFFSET (LORA_MSG_TYPE_OFFSET + LORA_MSG_TYPE_SZ)
+#define LORA_MSG_HUMIDITY_OFFSET (LORA_MSG_TEMPERATURE_OFFSET + SERIALIZED_DOUBLE_SZ)
+#define LORA_MSG_PRESSURE_OFFSET (LORA_MSG_HUMIDITY_OFFSET + SERIALIZED_DOUBLE_SZ)
+
 typedef enum {
     LORA_STATUS_OK,
     LORA_STATUS_ERROR
