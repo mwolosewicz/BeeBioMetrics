@@ -16,6 +16,7 @@
 static QueueHandle_t transmitter_data_queue;
 static bool is_transmitting = false;
 static portMUX_TYPE xTransmitMutex = portMUX_INITIALIZER_UNLOCKED;
+static uint16_t lora_msg_counter;
 
 static void task_tx(void *pvParameters) {
     ESP_LOGI(pcTaskGetName(NULL), "Start TX");
@@ -34,6 +35,7 @@ static void task_tx(void *pvParameters) {
             taskEXIT_CRITICAL(&xTransmitMutex);
 
             lora_send_packet(data_to_send.data, data_to_send.len);
+	    lora_msg_counter++;
 
             taskENTER_CRITICAL(&xTransmitMutex);
             is_transmitting = false;
@@ -60,4 +62,8 @@ bool lora_transmitter_is_transmiting() {
     ret = is_transmitting;
     taskEXIT_CRITICAL(&xTransmitMutex);
     return ret;
+}
+
+uint16_t lora_get_msg_counter(void) {
+  return lora_msg_counter;
 }

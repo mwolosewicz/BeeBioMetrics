@@ -25,4 +25,11 @@ void lora_transmitter_start_sending(QueueHandle_t send_queue);
  */
 bool lora_transmitter_is_transmiting();
 
+/**
+ * Get counter for lora messages
+ *
+ * @return counter
+ */
+uint16_t lora_get_msg_counter(void);
+
 #endif //ESP32_LORA_BATT_MONITOR_TRANSMITTER_H
