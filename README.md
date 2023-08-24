@@ -13,6 +13,9 @@ BeeEnviroMonitor is an embedded device project aimed at monitoring the environme
 The device offers a feature that allows it to enter a deep sleep mode after each transmission (TX) to conserve battery life.
 This sleep feature can be activated and configured via the menuconfig. Navigate to the following path in the menu: `Application Configuration -> Enable Sleep After Send`.
 
+### BME280 readout
+This device (as a sender) can be connected with BME280 and read measured temperature, humidity, pressure. Data is read from I2C and transmitted via LoRa.
+
 ## Hardware Requirements
 
 - ESP32 Microcontroller
@@ -21,6 +24,13 @@ This sleep feature can be activated and configured via the menuconfig. Navigate 
 
 ## Software Requirements
 
+## Message description
+8[B] - MAC address.
+2[B] - Message counter. Each transmitted message has an unique ID.
+1[B] - Message type. At the moment only one message type is supported. Readout of BME280.
+8[B] - Temperature in degC as a double.
+8[B] - Humidity in % as a double.
+8[B] - Pressure in hPa as a double.
 
 ## Installation and Setup
 
