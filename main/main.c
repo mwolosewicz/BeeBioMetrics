@@ -38,6 +38,7 @@ static void handle_rx(void *pvParameters) {
     serialized_data_t humidity;
     serialized_data_t pressure;
     uint16_t msg_counter;
+    uint8_t i;
 
     uint8_t mac_addr[MAC_ADDR_LEN];
 
@@ -68,6 +69,10 @@ static void handle_rx(void *pvParameters) {
 	      ESP_LOGI(pcTaskGetName(NULL), "Pressure:%.1f", pressure.value);
 	    } else {
 	      ESP_LOGI(pcTaskGetName(NULL), "Unknown message");
+	      ESP_LOGI(pcTaskGetName(NULL), "RX PACKET len:%d", rxData.len);
+	      for (i = 0; i < rxData.len; i++) {
+		ESP_LOGI(TAG, "0x%x ", rxData.data[i]);
+	      }
 	    }
         }
         // To keep watchdog happy:

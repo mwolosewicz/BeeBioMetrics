@@ -118,14 +118,23 @@ void bme280_normal_mode_task(void *ignore)
 
 	com_rslt = bme280_init(&bme280);
 
+	ESP_LOGI(TAG, "init:%d", com_rslt);
+
 	com_rslt += bme280_set_oversamp_pressure(BME280_OVERSAMP_16X);
+	ESP_LOGI(TAG, "set oversamp pressure:%d", com_rslt);
 	com_rslt += bme280_set_oversamp_temperature(BME280_OVERSAMP_2X);
+	ESP_LOGI(TAG, "set oversamp temp:%d", com_rslt);
 	com_rslt += bme280_set_oversamp_humidity(BME280_OVERSAMP_1X);
+	ESP_LOGI(TAG, "set oversamp humid:%d", com_rslt);
 
 	com_rslt += bme280_set_standby_durn(BME280_STANDBY_TIME_1_MS);
+	ESP_LOGI(TAG, "set standby durn:%d", com_rslt);
 	com_rslt += bme280_set_filter(BME280_FILTER_COEFF_16);
+	ESP_LOGI(TAG, "set filter:%d", com_rslt);
 
 	com_rslt += bme280_set_power_mode(BME280_NORMAL_MODE);
+	ESP_LOGI(TAG, "set power mode:%d", com_rslt);
+		
 	if (com_rslt == SUCCESS) {
 		while(true) {
 		  	vTaskDelay(pdMS_TO_TICKS(1000));
