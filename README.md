@@ -22,6 +22,13 @@ This device (as a sender) can be connected with BME280 and read measured tempera
 - LoRa Module
 - BMP280 Pressure and Temperature Sensor
 
+### Low power
+As of now the power consumption is as following:
+- ESP32+LoRa modem 2mA total (about 2 months on INR18650)
+- ES32+LoRa(no VCC) 132uA total (2-4 years INR18650)
+
+LoRa modem can be set to low power taking 0.1uA.
+
 ## Software Requirements
 
 ## Message description
